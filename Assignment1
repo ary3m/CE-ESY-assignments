@@ -1,0 +1,82 @@
+#include <stdio.h>
+#include <string.h>
+
+#define BUFFER_CAPACITY 10
+
+typedef struct {
+    char elements[BUFFER_CAPACITY];  // storage array
+    int readIndex;   // position to read from
+    int writeIndex;  // position to write to
+    int currentSize; // number of elements in buffer
+} CircularBuffer;
+
+// Initialize buffer
+void initializeBuffer(CircularBuffer *buffer) {
+    buffer->readIndex = 0;
+    buffer->writeIndex = 0;
+    buffer->currentSize = 0;
+}
+
+// Check if buffer is full
+int isBufferFull(CircularBuffer *buffer) {
+    return buffer->currentSize == BUFFER_CAPACITY;
+}
+
+// Check if buffer is empty
+int isBufferEmpty(CircularBuffer *buffer) {
+    return buffer->currentSize == 0;
+}
+
+// Write a character into buffer
+void enqueue(CircularBuffer *buffer, char character) {
+    if (isBufferFull(buffer)) {
+        printf("Error: Buffer is full\n");
+        return;
+    }
+
+    buffer->elements[buffer->writeIndex] = character;
+    buffer->writeIndex = (buffer->writeIndex + 1) % BUFFER_CAPACITY;
+    buffer->currentSize++;
+}
+
+// Read a character from buffer
+char dequeue(CircularBuffer *buffer) {
+    if (isBufferEmpty(buffer)) {
+        printf("Error: Buffer is empty\n");
+        return '\0';
+    }
+
+    char character = buffer->elements[buffer->readIndex];
+    buffer->readIndex = (buffer->readIndex + 1) % BUFFER_CAPACITY;
+    buffer->currentSize--;
+
+    return character;
+}
+
+int main() {
+    CircularBuffer buffer;
+    initializeBuffer(&buffer);
+
+    char userName[50];
+
+    printf("Enter your name: ");
+    scanf("%49s", userName);
+
+    // Append required suffix
+    strcat(userName, "ESY-CE");
+
+    // Store characters in buffer
+    for (int i = 0; i < strlen(userName); i++) {
+        enqueue(&buffer, userName[i]);
+    }
+
+    // Retrieve and print characters
+    printf("Output: ");
+    while (!isBufferEmpty(&buffer)) {
+        printf("%c", dequeue(&buffer));
+    }
+
+    printf("\nBuffer is now empty.\n");
+
+    return 0;
+}
