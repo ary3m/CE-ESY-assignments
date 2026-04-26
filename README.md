@@ -2,32 +2,41 @@
 
 ## Description
 
-This project is about implementing a circular buffer in C. The buffer stores characters and allows writing and reading data using a circular approach instead of a linear one.
+This project implements a circular buffer using the C programming language. The buffer stores characters and uses a circular approach to reuse space efficiently instead of stopping at the end of the array.
 
-## What the program does
+## Program Behavior
 
-* Takes the user’s name as input
-* Adds "ESY-CE" to the name
-* Stores each character in a circular buffer
-* Reads the characters back from the buffer
-* Prints the final result
-* Ensures the buffer is empty after reading
+* The program asks the user to enter a name
+* It appends "ESY-CE" to the entered name
+* Each character is stored in the circular buffer
+* The data is then read back from the buffer and printed
+* At the end, the program confirms that the buffer is empty
 
-## Functions implemented
+## Implementation Details
 
-* Initialize the buffer
+The buffer is implemented using a struct that contains:
+
+* A fixed-size character array
+* A write index (for inserting data)
+* A read index (for retrieving data)
+* A counter to track the number of elements
+
+The following operations are implemented:
+
+* Buffer initialization
 * Check if the buffer is full
 * Check if the buffer is empty
-* Write data into the buffer
-* Read data from the buffer
+* Write operation (with overflow handling)
+* Read operation (with underflow handling)
 
-## Notes
+## Key Concept
 
-* The program handles buffer overflow (when the buffer is full)
-* The program handles buffer underflow (when the buffer is empty)
-* Circular indexing is done using the modulo operator (%)
+Circular behavior is achieved using the modulo operator:
+(index + 1) % BUFFER_CAPACITY
 
-## How to run
+This allows the indices to wrap around to the beginning of the array.
+
+## How to Run
 
 1. Compile the program:
 
@@ -40,6 +49,12 @@ gcc main.c -o main
 ```
 ./main
 ```
+
+## Notes
+
+* The program handles overflow when the buffer is full
+* The program handles underflow when the buffer is empty
+* The implementation is done manually without using built-in data structures
 
 ## Author
 
