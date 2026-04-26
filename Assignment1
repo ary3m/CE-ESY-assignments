@@ -4,76 +4,76 @@
 #define BUFFER_CAPACITY 10
 
 typedef struct {
-    char elements[BUFFER_CAPACITY];  // storage array
-    int readIndex;   // position to read from
-    int writeIndex;  // position to write to
-    int currentSize; // number of elements in buffer
+    char data[BUFFER_CAPACITY];
+    int writeIndex;      // position to write
+    int readIndex;       // position to read
+    int currentSize;     // number of stored elements
 } CircularBuffer;
 
 // Initialize buffer
-void initializeBuffer(CircularBuffer *buffer) {
-    buffer->readIndex = 0;
-    buffer->writeIndex = 0;
-    buffer->currentSize = 0;
+void initializeBuffer(CircularBuffer *cb) {
+    cb->writeIndex = 0;
+    cb->readIndex = 0;
+    cb->currentSize = 0;
 }
 
 // Check if buffer is full
-int isBufferFull(CircularBuffer *buffer) {
-    return buffer->currentSize == BUFFER_CAPACITY;
+int isBufferFull(CircularBuffer *cb) {
+    return cb->currentSize == BUFFER_CAPACITY;
 }
 
 // Check if buffer is empty
-int isBufferEmpty(CircularBuffer *buffer) {
-    return buffer->currentSize == 0;
+int isBufferEmpty(CircularBuffer *cb) {
+    return cb->currentSize == 0;
 }
 
-// Write a character into buffer
-void enqueue(CircularBuffer *buffer, char character) {
-    if (isBufferFull(buffer)) {
-        printf("Error: Buffer is full\n");
+// Write data into buffer
+void writeBuffer(CircularBuffer *cb, char value) {
+    if (isBufferFull(cb)) {
+        printf("Error: Buffer Overflow\n");
         return;
     }
 
-    buffer->elements[buffer->writeIndex] = character;
-    buffer->writeIndex = (buffer->writeIndex + 1) % BUFFER_CAPACITY;
-    buffer->currentSize++;
+    cb->data[cb->writeIndex] = value;
+    cb->writeIndex = (cb->writeIndex + 1) % BUFFER_CAPACITY;
+    cb->currentSize++;
 }
 
-// Read a character from buffer
-char dequeue(CircularBuffer *buffer) {
-    if (isBufferEmpty(buffer)) {
-        printf("Error: Buffer is empty\n");
+// Read data from buffer
+char readBuffer(CircularBuffer *cb) {
+    if (isBufferEmpty(cb)) {
+        printf("Error: Buffer Underflow\n");
         return '\0';
     }
 
-    char character = buffer->elements[buffer->readIndex];
-    buffer->readIndex = (buffer->readIndex + 1) % BUFFER_CAPACITY;
-    buffer->currentSize--;
+    char value = cb->data[cb->readIndex];
+    cb->readIndex = (cb->readIndex + 1) % BUFFER_CAPACITY;
+    cb->currentSize--;
 
-    return character;
+    return value;
 }
 
 int main() {
-    CircularBuffer buffer;
-    initializeBuffer(&buffer);
+    CircularBuffer cb;
+    initializeBuffer(&cb);
 
     char userName[50];
 
     printf("Enter your name: ");
     scanf("%49s", userName);
 
-    // Append required suffix
+    // Required suffix (as stated in assignment)
     strcat(userName, "ESY-CE");
 
-    // Store characters in buffer
+    // Write characters into buffer
     for (int i = 0; i < strlen(userName); i++) {
-        enqueue(&buffer, userName[i]);
+        writeBuffer(&cb, userName[i]);
     }
 
-    // Retrieve and print characters
+    // Read and print output
     printf("Output: ");
-    while (!isBufferEmpty(&buffer)) {
-        printf("%c", dequeue(&buffer));
+    while (!isBufferEmpty(&cb)) {
+        printf("%c", readBuffer(&cb));
     }
 
     printf("\nBuffer is now empty.\n");
